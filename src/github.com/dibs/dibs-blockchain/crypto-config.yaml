@@ -1,0 +1,13 @@
+OrdererOrgs:
+  - Name: Orderer
+    Domain: dibs.cash
+    Specs:
+      - Hostname: orderer
+PeerOrgs:
+  - Name: Dibs
+    Domain: dibs.cash
+    Template:
+      Count: 1
+    Users:
+      Count: 2
+ 
