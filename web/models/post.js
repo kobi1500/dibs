@@ -21,6 +21,13 @@ createdAt:{
 author:{
     type: Schema.ObjectId,
     ref: 'User'
+},
+pictureProfile:{
+    type: String,
+    ref: 'User'
+},
+nameOfAuthor:{
+    type:String
 }
 
 });

@@ -12,7 +12,9 @@ router.post('/add_post', (req, res) => {
     var newPost = new Post({
         subject: req.body.subject,
         content: req.body.content,
-        author:req.user._id
+        author:req.user._id,
+        pictureProfile:req.user.profileImageURL,
+        nameOfAuthor:req.user.providerData.name
     });
     newPost.save().then(post =>{
         post=post

@@ -34,6 +34,7 @@ router.get('/profile', ensureAuthenticated, (req, res) => {
             //     }
 
             // }
+            console.log(req.user)
             
             res.render('users/profile', { currentUser: req.user, posts: posts});
         }
