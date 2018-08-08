@@ -7,6 +7,7 @@
                 <div class="col-lg-8">
                     <div class="single-page-post">
                         <div class="top-wrapper ">
+                            {{#each posts}}
                             <div class="row d-flex justify-content-between">
                                 <h2 class="col-lg-8 col-md-12 text-uppercase">
                                     A Discount Toner Cartridge Is Better Than Ever
@@ -17,43 +18,18 @@
                                         <h3>12 Dec ,2017 11:21 am</h3>
                                     </div>
                                     <div class="user-img">
-                                        <img src="/img/user.jpg" alt="">
+                                        <img src="{{user.profileImageURL}}" style="width:50px;">
                                     </div>
                                 </div>
                             </div>
+                            {{/each}}
                         </div>
 
                         <div class="single-post-content">
                             <p>
-                                MCSE boot camps have its supporters and its detractors. Some people do not understand why you should have to spend money
-                                on boot camp when you can get the MCSE study materials yourself at a fraction of the camp
-                                price. However, who has the willpower to actually sit through a self-imposed MCSE training.
+                                
                             </p>
-                            <p>
-                                MCSE boot camps have its supporters and its detractors. Some people do not understand why you should have to spend money
-                                on boot camp when you can get the MCSE study materials yourself at a fraction of the camp
-                                price. However, who has the willpower to actually sit through a self-imposed MCSE training.
-                                who has the willpower to actually sit through a self-imposed MCSE training.
-                            </p>
-
-                            <blockquote>Ea possunt paria non esse. Pudebit te, inquam, illius tabulae, quam Cleanthes sane commode verbis
-                                depingere solebat. Urgent tamen et nihil remittunt. An vero displicuit ea, quae tributa est
-                                animi virtutibus tanta praestantia? Sint ista Graecorum; Cur igitur, cum de re conveniat,
-                                non malumus usitate loqui? Huius ego nunc auctoritatem sequens idem faciam.
-                                <cite>Wise Man</cite>
-                            </blockquote>
-
-                            <p>
-                                MCSE boot camps have its supporters and its detractors. Some people do not understand why you should have to spend money
-                                on boot camp when you can get the MCSE study materials yourself at a fraction of the camp
-                                price. However, who has the willpower to actually sit through a self-imposed MCSE training.
-                            </p>
-                            <p>
-                                MCSE boot camps have its supporters and its detractors. Some people do not understand why you should have to spend money
-                                on boot camp when you can get the MCSE study materials yourself at a fraction of the camp
-                                price. However, who has the willpower to actually sit through a self-imposed MCSE training.
-                                who has the willpower to actually sit through a self-imposed MCSE training.
-                            </p>
+                            
                         </div>
                         <div class="bottom-wrapper">
                             <div class="row">
@@ -91,41 +67,6 @@
                             </div>
                         </div>
 
-                        <!-- Start nav Area -->
-                        <section class="nav-area pt-50 pb-100">
-                            <div class="container">
-                                <div class="row justify-content-between">
-                                    <div class="col-sm-6 nav-left justify-content-start d-flex">
-                                        <div class="thumb">
-                                            <img src="/img/prev.jpg" alt="">
-                                        </div>
-                                        <div class="details">
-                                            <p>Prev Post</p>
-                                            <h4 class="text-uppercase">
-                                                <a href="#">A Discount Toner</a>
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 nav-right justify-content-end d-flex">
-                                        <div class="details">
-                                            <p>Prev Post</p>
-                                            <h4 class="text-uppercase">
-                                                <a href="#">A Discount Toner</a>
-                                            </h4>
-                                        </div>
-                                        <div class="thumb">
-                                            <img src="/img/next.jpg" alt="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                        <!-- End nav Area -->
-
-
-
-
-
                     </div>
                 </div>
                 <div class="col-lg-4 sidebar-area ">
@@ -147,24 +88,21 @@
 
                         <h2 class="text-uppercase">{{user.displayName}}</h2>
                         <p>
-                            {{user.email}} <br>
-                            {{user.DateBirth}}<br>
-                            {{user.street}}<br>
-                            {{user.country}}<br> 
-                            {{user.phone}}<br> 
+                            {{user.email}}
+                            <br> {{user.DateBirth}}
+                            <br> {{user.street}}
+                            <br> {{user.country}}
+                            <br> {{user.phone}}
+                            <br>
                         </p>
                         <div class="social-link">
                             <a href="/users/edit_profile/{{user._id}}">
-                                <button class="btn">
+                                <button class="btn text-center">
                                     <i class="fa fa-edit" aria-hidden="true"></i> Edit</button>
-                            </a>
-                            <a href="#">
-                                <button class="btn">
-                                    <i class="fa fa-twitter" aria-hidden="true"></i> follow</button>
                             </a>
                         </div>
                     </div>
-                 
+
 
                     <div class="single_widget recent_widget">
                         <h4 class="text-uppercase pb-20">Recent Posts</h4>

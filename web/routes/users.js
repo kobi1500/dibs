@@ -7,6 +7,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 const users = require('../controllers/users.controller');
 const User = require('../models/user');
+const Post = require('../models/post');
 const configAuth = require('../config/auth');
 
 
@@ -21,12 +22,19 @@ router.get('/login', (req, res) => {
 router.get('/register', (req, res) => {
     res.render('users/register');
 });
-router.get('/profile', (req, res) => {
-    res.render('users/profile');
+router.get('/profile', ensureAuthenticated, (req, res) => {
+    Post.find({'author':req.user._id}, (err, posts) => {
+        if(err) {
+          console.log(err);
+        } else {
+            
+          res.render('users/profile', {currentUser: req.user, posts: posts});
+        }
+     });
+     
+ 
 
 });
-
-
 
 router.get('/edit_profile/:id', (req, res) => {
     User.findOne({
@@ -59,7 +67,7 @@ router.put('/profile/:id', (req, res) => {
     });
 });
 
-router.post('/register', (req, res) => {
+router.post('/register', ensureAuthenticated, (req, res) => {
     let errors = [];
     if (req.body.pass != req.body.pass2) {
         errors.push({ text: "passwords does not match!" });
@@ -106,6 +114,7 @@ router.post('/register', (req, res) => {
         res.redirect('/users/login');
     }
 });
+
 
 
 passport.use(new LocalStrategy({
@@ -237,5 +246,12 @@ router.get('/logout', function (req, res) {
     res.redirect('/');
 });
 
-
+// Access Control
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
+        res.redirect('/');
+    }
+}
 module.exports = router;

@@ -17,6 +17,9 @@ mongoose.connect('mongodb://localhost/dibs-db',{})
 const port = process.env.PORT || '3000'
 const users = require('./routes/users');
 const posts = require('./routes/posts');
+
+const Post = require('./models/post');
+
 const app = express();
 
 
@@ -62,9 +65,20 @@ next();
 });
 
 
-app.get('/',(req,res) => {
-    res.render('index')
-});
+
+app.get('/', function(req, res){
+    Post.find({}, function(err, posts){
+      if(err){
+        console.log(err);
+      } else {
+        res.render('index', {
+          posts: posts
+        });
+      }
+    });
+  });
+
+
 
 app.use('/users', users);
 app.use('/posts', posts);
