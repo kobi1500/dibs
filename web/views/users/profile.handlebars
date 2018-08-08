@@ -5,29 +5,31 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
+                
+                    {{#each posts}}
                     <div class="single-page-post">
-                        <div class="top-wrapper ">
-                            {{#each posts}}
+                        <div class="top-wrapper">
                             <div class="row d-flex justify-content-between">
+                               
                                 <h2 class="col-lg-8 col-md-12 text-uppercase">
-                                    A Discount Toner Cartridge Is Better Than Ever
+                                   {{subject}}
                                 </h2>
                                 <div class="col-lg-4 col-md-12 right-side d-flex justify-content-end">
                                     <div class="desc">
-                                        <h2>Mark wiens</h2>
-                                        <h3>12 Dec ,2017 11:21 am</h3>
+                                        <h2>{{user.fullName}}</h2>
+                                     
+                                        <h3>{{ dateFormat}}</h3>
                                     </div>
                                     <div class="user-img">
                                         <img src="{{user.profileImageURL}}" style="width:50px;">
                                     </div>
                                 </div>
                             </div>
-                            {{/each}}
                         </div>
 
                         <div class="single-post-content">
                             <p>
-                                
+                               {{content}} 
                             </p>
                             
                         </div>
@@ -68,6 +70,7 @@
                         </div>
 
                     </div>
+                    {{/each}}
                 </div>
                 <div class="col-lg-4 sidebar-area ">
                     <div class="single_widget search_widget">
@@ -82,7 +85,7 @@
                             </div>
                         </div>
                     </div>
-
+              
                     <div class="single_widget about_widget">
                         <img src="{{user.profileImageURL}}" style="width:300px;">
 

@@ -4,12 +4,12 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var moment = require('moment');
 
 const users = require('../controllers/users.controller');
 const User = require('../models/user');
 const Post = require('../models/post');
 const configAuth = require('../config/auth');
-
 
 
 router.get('/login', (req, res) => {
@@ -23,16 +23,23 @@ router.get('/register', (req, res) => {
     res.render('users/register');
 });
 router.get('/profile', ensureAuthenticated, (req, res) => {
-    Post.find({'author':req.user._id}, (err, posts) => {
-        if(err) {
-          console.log(err);
+    Post.find({ 'author': req.user._id }, (err, posts) => {
+        if (err) {
+            console.log(err);
         } else {
+            // for (i in posts) {
+            //     var formatted_date = moment(posts[i].createdAt).format("DD-MM-YYYY");
+            //     date={
+            //         dateFormat:formatted_date
+            //     }
+
+            // }
             
-          res.render('users/profile', {currentUser: req.user, posts: posts});
+            res.render('users/profile', { currentUser: req.user, posts: posts});
         }
-     });
-     
- 
+    });
+
+
 
 });
 

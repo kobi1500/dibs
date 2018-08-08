@@ -71,6 +71,7 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-6 travel-left">
+				{{#each posts}}
 				<div class="single-travel media pb-70">
 					<img class="img-fluid d-flex  mr-3" src="img/t1.jpg" alt="">
 					<div class="dates">
@@ -79,9 +80,9 @@
 					</div>
 					<div class="media-body align-self-center">
 						<h4 class="mt-0">
-							<a href="#">Addiction When Gambling Becomes A Problem</a>
+							<a href="#">{{subject}}</a>
 						</h4>
-						<p>inappropriate behavior Lorem ipsum dolor sit amet, consectetur.</p>
+						<p>{{content}}</p>
 						<div class="meta-bottom d-flex justify-content-between">
 							<p>
 								<span class="lnr lnr-heart"></span> 15 Likes</p>
@@ -90,25 +91,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="single-travel media">
-					<img class="img-fluid d-flex  mr-3" src="img/t3.jpg" alt="">
-					<div class="dates">
-						<span>20</span>
-						<p>Dec</p>
-					</div>
-					<div class="media-body align-self-center">
-						<h4 class="mt-0">
-							<a href="#">Addiction When Gambling Becomes A Problem</a>
-						</h4>
-						<p>inappropriate behavior Lorem ipsum dolor sit amet, consectetur.</p>
-						<div class="meta-bottom d-flex justify-content-between">
-							<p>
-								<span class="lnr lnr-heart"></span> 15 Likes</p>
-							<p>
-								<span class="lnr lnr-bubble"></span> 02 Comments</p>
-						</div>
-					</div>
-				</div>
+			
+				{{/each}}
 			</div>
 			<div class="col-lg-6 travel-right">
 				<div class="single-travel media pb-70">
