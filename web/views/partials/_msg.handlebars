@@ -1,8 +1,13 @@
 {{#if success_msg}}
-<div class="alert alert-success">{{good_msg}}</div>
+<div class="alert alert-success m-t-40">{{good_msg}}</div>
 {{/if}}
 
 {{#if error_msg}}
-<div class="alert alert-danger">{{error_msg}}</div>
+<div class="alert alert-danger m-t-40">{{error_msg}}</div>
+{{/if}}
+
+
+{{#if error}}
+<div class="alert alert-danger m-t-40">{{error}}</div>
 {{/if}}
 

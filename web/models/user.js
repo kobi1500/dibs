@@ -17,7 +17,6 @@ const UserSchema = new Schema({
     },
     username: {
         type: String,
-        unique: 'Username already exists',
         lowercase: true,
         trim: true
     },
@@ -49,26 +48,33 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    resetPasswordToken: {
+        type: String
+    },
+
+    resetPasswordExpires: {
+        type: String
+    }
 });
 
 module.exports = UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
     var _this = this;
     var possibleUsername = username.toLowerCase() + (suffix || '');
-  
+
     _this.findOne({
-      username: possibleUsername
+        username: possibleUsername
     }, function (err, user) {
-      if (!err) {
-        if (!user) {
-          callback(possibleUsername);
+        if (!err) {
+            if (!user) {
+                callback(possibleUsername);
+            } else {
+                return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
+            }
         } else {
-          return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
+            callback(null);
         }
-      } else {
-        callback(null);
-      }
     });
-  };
+};
 
 var User = module.exports = mongoose.model('User', UserSchema);
 module.exports.createUser = function (newUser, callback) {

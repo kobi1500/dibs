@@ -4,12 +4,17 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var moment = require('moment');
+const moment = require('moment');
+const async = require("async");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
+const bcrypt = require('bcryptjs');
 
 const users = require('../controllers/users.controller');
 const User = require('../models/user');
 const Post = require('../models/post');
 const configAuth = require('../config/auth');
+const configMailer = require('../config/nodemailer');
 
 
 router.get('/login', (req, res) => {
@@ -22,6 +27,121 @@ router.get('/login', (req, res) => {
 router.get('/register', (req, res) => {
     res.render('users/register');
 });
+
+router.get('/forget_password',(req,res) => {
+    res.render('users/forget_password');
+});
+
+router.post('/forget_password', function(req, res, next) {
+    async.waterfall([
+      function(done) {
+        crypto.randomBytes(20, function(err, buf) {
+          var token = buf.toString('hex');
+          done(err, token);
+        });
+      },
+      function(token, done) {
+        User.findOne({ email: req.body.email }, function(err, user) {
+          if (!user) {
+            req.flash('error', 'No account with that email address exists.');
+          }
+  
+          user.resetPasswordToken = token;
+          user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+  
+          user.save(function(err) {
+            done(err, token, user);
+          });
+        });
+      },
+      function(token, user, done) {
+        var smtpTransport = nodemailer.createTransport({
+          service: configMailer.mailer.options.service, 
+          auth: {
+            user: configMailer.mailer.options.auth.user,
+            pass: configMailer.mailer.options.auth.pass
+          }
+        });
+        var mailOptions = {
+          to: user.email,
+          from: configMailer.mailer.from,
+          subject: 'Password Reset',
+          text: 'You are receiving this because you  have requested the reset of the password for your account.\n\n' +
+            'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+            'http://' + req.headers.host + '/users/forget_password_confirm/' + token + '\n\n' +
+            'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+        };
+        smtpTransport.sendMail(mailOptions, function(err) {
+          console.log('mail sent');
+          req.flash('success_msg', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+          done(err, 'done');
+
+        });
+      }
+    ], function(err) {
+      if (err) return next(err);
+      res.render('users/forget_password',req.flash('success_msg'));
+    });
+  });
+  
+  router.get('/forget_password_confirm/:token', function(req, res) {
+    User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+      if (!user) {
+        req.flash('error', 'Password reset token is invalid or has expired.');
+      }
+      res.render('users/forget_password_confirm', {token: req.params.token,});
+    });
+  });
+  
+  router.post('/forget_password_confirm/:token', function(req, res) {
+    async.waterfall([
+      function(done) {
+        User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+          if (!user) {
+            req.flash('error', 'Password reset token is invalid or has expired.');
+          }
+          if(req.body.password === req.body.confirm) {
+            user.password=bcrypt.hashSync(req.body.password, 10);; 
+              user.resetPasswordToken = undefined;
+               user.resetPasswordExpires = undefined;
+  
+              user.save(function(err) {
+                req.logIn(user, function(err) {
+                  done(err, user);
+                });
+              });
+            
+          } else {
+              req.flash("error", "Passwords do not match.");
+              return res.redirect('back');
+          }
+        });
+      },
+      function(user, done) {
+        var smtpTransport = nodemailer.createTransport({
+            service: configMailer.mailer.options.service, 
+            auth: {
+              user: configMailer.mailer.options.auth.user,
+              pass: configMailer.mailer.options.auth.pass
+            }
+          });
+        var mailOptions = {
+          to: user.email,
+          from: configMailer.mailer.from,
+          subject: 'Your password has been changed',
+          text: 'Hello,\n\n' +
+            'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+        };
+        smtpTransport.sendMail(mailOptions, function(err) {
+          req.flash('success', 'Success! Your password has been changed.');
+          done(err);
+        });
+      }
+    ], function(err) {
+      res.redirect('/users/login');
+    });
+  });
+  
 router.get('/profile', ensureAuthenticated, (req, res) => {
     Post.find({ 'author': req.user._id }, (err, posts) => {
         if (err) {
@@ -34,7 +154,6 @@ router.get('/profile', ensureAuthenticated, (req, res) => {
             //     }
 
             // }
-            console.log(req.user)
             
             res.render('users/profile', { currentUser: req.user, posts: posts});
         }
@@ -75,7 +194,7 @@ router.put('/profile/:id', (req, res) => {
     });
 });
 
-router.post('/register', ensureAuthenticated, (req, res) => {
+router.post('/register', (req, res) => {
     let errors = [];
     if (req.body.pass != req.body.pass2) {
         errors.push({ text: "passwords does not match!" });
