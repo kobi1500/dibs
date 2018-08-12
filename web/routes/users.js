@@ -24,6 +24,16 @@ router.get('/login', (req, res) => {
     res.render('users/login', { message: message });
 });
 
+router.get('/notfound', (req, res) => {
+
+    res.render('users/notfound');
+});
+router.get('/resetPasswordExpires', (req, res) => {
+
+    res.render('users/resetPasswordExpires');
+});
+
+
 router.get('/register', (req, res) => {
     res.render('users/register');
 });
@@ -43,7 +53,8 @@ router.post('/forget_password', function(req, res, next) {
       function(token, done) {
         User.findOne({ email: req.body.email }, function(err, user) {
           if (!user) {
-            req.flash('error', 'No account with that email address exists.');
+           res.redirect('notfound');
+           return;
           }
   
           user.resetPasswordToken = token;
@@ -80,14 +91,15 @@ router.post('/forget_password', function(req, res, next) {
       }
     ], function(err) {
       if (err) return next(err);
-      res.render('users/forget_password',req.flash('success_msg'));
+      res.redirect('forget_password');
     });
   });
   
   router.get('/forget_password_confirm/:token', function(req, res) {
     User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
       if (!user) {
-        req.flash('error', 'Password reset token is invalid or has expired.');
+        req.flash('error_msg', 'Password reset token is invalid or has expired.');
+        return res.redirect('back');
       }
       res.render('users/forget_password_confirm', {token: req.params.token,});
     });
@@ -98,7 +110,8 @@ router.post('/forget_password', function(req, res, next) {
       function(done) {
         User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
           if (!user) {
-            req.flash('error', 'Password reset token is invalid or has expired.');
+            req.flash('error_msg', 'Password reset token is invalid or has expired.');
+            res.redirect('forget_password');
           }
           if(req.body.password === req.body.confirm) {
             user.password=bcrypt.hashSync(req.body.password, 10);; 
@@ -112,7 +125,7 @@ router.post('/forget_password', function(req, res, next) {
               });
             
           } else {
-              req.flash("error", "Passwords do not match.");
+              req.flash("error_msg", "Passwords do not match.");
               return res.redirect('back');
           }
         });
@@ -133,7 +146,7 @@ router.post('/forget_password', function(req, res, next) {
             'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
         };
         smtpTransport.sendMail(mailOptions, function(err) {
-          req.flash('success', 'Success! Your password has been changed.');
+          req.flash('success_msg', 'Success! Your password has been changed.');
           done(err);
         });
       }

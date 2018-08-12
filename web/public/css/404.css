@@ -1,0 +1,18 @@
+/*
+HTML 5 Template Name: 
+File: 404 - 21 CSS
+Author: OS Templates
+Author URI: https://www.os-templates.com/
+Licence: <a href="https://www.os-templates.com/template-terms">Website Template Licence</a>
+*/
+
+#fof{display:block; width:100%; margin:80px 0 100px 0; line-height:1.6em; text-align:center;}
+#fof .fl_left{}
+#fof .fl_left h1{margin:0; padding:0; font-size:220px;}
+#fof .fl_left h1 strong{color:#000000; background-color:#FFFFFF;}
+#fof .fl_left h1 span{font-size:60px;}
+#fof .fl_right{margin-top:60px; text-align:left;}
+#fof .fl_right h2{font-size:30px; text-align:center; text-transform:uppercase;}
+#fof p{display:block; margin:25px 0 0 0; padding:0; clear:both; font-size:16px;}
+#fof p a.go-back{}
+#fof p a.go-home{}
