@@ -11,7 +11,7 @@ const bodyParser = require('body-parser');
 
 
 //mongoose
-mongoose.connect('mongodb://localhost/dibs-db',{})
+mongoose.connect('mongodb://localhost:27017/dibs-db',{useNewUrlParser: true})
 .then(() => console.log('database is connected...')) 
 .catch((err) => console.log(err));
 const port = process.env.PORT || '3000'
@@ -41,7 +41,6 @@ app.use(session({
 app.use(flash());
 
 app.use(express.static(path.join(__dirname, 'public')));
-
 // Express Session
 
 

@@ -6,16 +6,35 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const moment = require('moment');
 const async = require("async");
+const path = require('path');
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const bcrypt = require('bcryptjs');
-
+const multer = require("multer");
 const users = require('../controllers/users.controller');
 const User = require('../models/user');
 const Post = require('../models/post');
 const configAuth = require('../config/auth');
 const configMailer = require('../config/nodemailer');
 
+
+var upload = multer({storage: multer.diskStorage({
+
+    destination: function (req, file, callback) 
+    { callback(null, './uploads');},
+    filename: function (req, file, callback) 
+    { callback(null, file.fieldname +'-' + Date.now()+path.extname(file.originalname));}
+  
+  }),
+  
+  fileFilter: function(req, file, callback) {
+    var ext = path.extname(file.originalname)
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+      return callback(null, false)
+    }
+    callback(null, true)
+  }
+  });
 
 router.get('/login', (req, res) => {
 
@@ -28,11 +47,6 @@ router.get('/notfound', (req, res) => {
 
     res.render('users/notfound');
 });
-router.get('/resetPasswordExpires', (req, res) => {
-
-    res.render('users/resetPasswordExpires');
-});
-
 
 router.get('/register', (req, res) => {
     res.render('users/register');
@@ -99,7 +113,6 @@ router.post('/forget_password', function(req, res, next) {
     User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
       if (!user) {
         req.flash('error_msg', 'Password reset token is invalid or has expired.');
-        return res.redirect('back');
       }
       res.render('users/forget_password_confirm', {token: req.params.token,});
     });
@@ -207,7 +220,9 @@ router.put('/profile/:id', (req, res) => {
     });
 });
 
-router.post('/register', (req, res) => {
+router.post('/register',upload.any(), (req, res) => {
+    console.log(req.files); //form files
+
     let errors = [];
     if (req.body.pass != req.body.pass2) {
         errors.push({ text: "passwords does not match!" });
@@ -244,7 +259,8 @@ router.post('/register', (req, res) => {
             phone: req.body.phone,
             email: req.body.email,
             username: req.body.username,
-            password: req.body.pass
+            password: req.body.pass,
+            profileImageURL: req.files[0].path
         });
         User.createUser(newUser, function (err, user) {
             if (err) throw err;
@@ -254,7 +270,6 @@ router.post('/register', (req, res) => {
         res.redirect('/users/login');
     }
 });
-
 
 
 passport.use(new LocalStrategy({

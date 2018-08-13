@@ -23,7 +23,7 @@
     <div class="limiter">
         <div class="container-login100" style="background-image: url('/img/bg-01.jpg');">
             <div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
-                <form action="/users/register" method="post" class="login100-form validate-form flex-sb flex-w" autocomplete="off">
+                <form action="/users/register" enctype="multipart/form-data" method="post" class="login100-form validate-form flex-sb flex-w" autocomplete="off">
                     <span class="login100-form-title p-b-53">
                         Sign Up
                     </span>
@@ -138,7 +138,7 @@
 
                     </div>
                     <div class="container-login100-form-btn m-t-17">
-                        <input class="login100-form-btn" type="file"> 
+                        <input class="login100-form-btn" name="image" type="file"> 
                         
                     </div>
                     <div class="container-login100-form-btn m-t-17">
