@@ -18,10 +18,10 @@
                                     <div class="desc">
                                         <h2>{{nameOfAuthor}}</h2>
                                      
-                                        <h3>{{ createdAt}}</h3>
+                                        <h3>{{createdAt}}</h3>
                                     </div>
                                     <div class="user-img">
-                                        <img src="{{pictureProfile}}" style="width:50px;">
+                                        <img src="/{{pictureProfile}}" style="width:50px;">
                                     </div>
                                 </div>
                             </div>
@@ -87,9 +87,9 @@
                     </div>
               
                     <div class="single_widget about_widget">
-                        <img src="{{user.profileImageURL}}" style="width:300px;">
+                        <img src="/{{user.profileImageURL}}" style="width:300px;">
 
-                        <h2 class="text-uppercase">{{user.fullName}}</h2>
+                        <h2 class="text-uppercase">{{user.displayName}}</h2>
                         <p>
                             {{user.email}}
                             <br> {{user.DateBirth}}

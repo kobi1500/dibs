@@ -9,7 +9,7 @@ const UserSchema = new Schema({
         type: String
     },
     DateBirth: {
-        type: Date
+        type: String
     },
     displayName: {
         type: String,

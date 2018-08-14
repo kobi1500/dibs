@@ -1,8 +1,9 @@
 {{#each errors}}
-<div class="alert alert-warning alert-dismissible fade show" role="alert"></div>
-    {{text}}
-<button type="button" class="close" data-dismiss="alert" aria-label="close">
+<div class="alert alert-warning alert-dismissible fade show m-t-20" role="alert">
+{{text}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
-</button>
+  </button>
+</div>
 {{else}}
 {{/each}}

@@ -14,7 +14,7 @@ router.post('/add_post', (req, res) => {
         content: req.body.content,
         author:req.user._id,
         pictureProfile:req.user.profileImageURL,
-        nameOfAuthor:req.user.providerData.name
+        nameOfAuthor:req.user.displayName
     });
     newPost.save().then(post =>{
         post=post

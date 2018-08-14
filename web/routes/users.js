@@ -21,7 +21,7 @@ const configMailer = require('../config/nodemailer');
 var upload = multer({storage: multer.diskStorage({
 
     destination: function (req, file, callback) 
-    { callback(null, './public/uploads');},
+    { callback(null, 'uploads/');},
     filename: function (req, file, callback) 
     { callback(null, file.fieldname +'-' + Date.now()+path.extname(file.originalname));}
   
@@ -169,18 +169,11 @@ router.post('/forget_password', function(req, res, next) {
   });
   
 router.get('/profile', ensureAuthenticated, (req, res) => {
+
     Post.find({ 'author': req.user._id }, (err, posts) => {
         if (err) {
             console.log(err);
         } else {
-            // for (i in posts) {
-            //     var formatted_date = moment(posts[i].createdAt).format("DD-MM-YYYY");
-            //     date={
-            //         dateFormat:formatted_date
-            //     }
-
-            // }
-            
             res.render('users/profile', { currentUser: req.user, posts: posts});
         }
     });
@@ -201,12 +194,13 @@ router.get('/edit_profile/:id', (req, res) => {
 });
 
 router.put('/profile/:id', (req, res) => {
+    format=moment(req.body.DateBirth).format("DD-MM-YYYY");
     User.findOne({
         _id: req.params.id
 
     }).then(user => {
         user.fullName = req.body.fullName;
-        user.DateBirth = req.body.DateBirth;
+        user.DateBirth = format;
         user.street = req.body.street;
         user.country = req.body.country;
         user.phone = req.body.phone;
@@ -221,7 +215,6 @@ router.put('/profile/:id', (req, res) => {
 });
 
 router.post('/register',upload.any(), (req, res) => {
-    console.log(req.files); //form files
 
     let errors = [];
     if (req.body.pass != req.body.pass2) {
@@ -237,7 +230,7 @@ router.post('/register',upload.any(), (req, res) => {
     if (errors.length > 0) {
         res.render('users/register', {
             errors: errors,
-            fullName: req.body.fullName,
+            displayName: req.body.displayName,
             DateBirth: req.body.DateBirth,
             street: req.body.street,
             country: req.body.country,
@@ -250,17 +243,17 @@ router.post('/register',upload.any(), (req, res) => {
 
         });
     } else {
-
+        format = moment(req.body.DateBirth).format("DD-MM-YYYY");
         var newUser = new User({
-            fullName: req.body.fullName,
-            DateBirth: req.body.DateBirth,
+            displayName: req.body.displayName,
+            DateBirth: format,
             street: req.body.street,
             country: req.body.country,
             phone: req.body.phone,
             email: req.body.email,
             username: req.body.username,
             password: req.body.pass,
-            profileImageURL: req.files[0].path
+            profileImageURL: req.files[0].filename
         });
         User.createUser(newUser, function (err, user) {
             if (err) throw err;
